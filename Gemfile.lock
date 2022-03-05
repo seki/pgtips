@@ -1,6 +1,8 @@
 GEM
   remote: https://rubygems.org/
   specs:
+    addressable (2.8.0)
+      public_suffix (>= 2.0.2, < 5.0)
     aws-eventstream (1.2.0)
     aws-partitions (1.563.0)
     aws-sdk-core (3.128.0)
@@ -17,11 +19,35 @@ GEM
       aws-sigv4 (~> 1.4)
     aws-sigv4 (1.4.0)
       aws-eventstream (~> 1, >= 1.0.2)
+    domain_name (0.5.20190701)
+      unf (>= 0.0.5, < 1.0.0)
+    ffi (1.15.5)
+    ffi-compiler (1.0.1)
+      ffi (>= 1.0.0)
+      rake
+    http (4.4.1)
+      addressable (~> 2.3)
+      http-cookie (~> 1.0)
+      http-form_data (~> 2.2)
+      http-parser (~> 1.2.0)
+    http-cookie (1.0.4)
+      domain_name (~> 0.5)
+    http-form_data (2.3.0)
+    http-parser (1.2.3)
+      ffi-compiler (>= 1.0, < 2.0)
     jmespath (1.6.0)
     json (2.6.1)
     mail (2.7.1)
       mini_mime (>= 0.1.1)
     mini_mime (1.1.2)
+    paapi (0.1.2)
+      aws-sigv4 (~> 1)
+      http (~> 4)
+    public_suffix (4.0.6)
+    rake (13.0.6)
+    unf (0.1.4)
+      unf_ext
+    unf_ext (0.0.8)
 
 PLATFORMS
   ruby
@@ -30,6 +56,7 @@ DEPENDENCIES
   aws-sdk-s3
   json
   mail
+  paapi
 
 RUBY VERSION
    ruby 3.0.0p0
