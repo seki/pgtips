@@ -7,8 +7,13 @@ module PGTips
   Name = "tea.json"
   class Doc
     def self.load
-      it = Store.get_object('tea.json') rescue {}
-      self.new(it)
+      begin
+        it = Store.get_object('tea.json')
+        hash = JSON.parse(it.body.read)
+      rescue
+        hash = {}
+      end
+      self.new(hash)
     end
 
     def initialize(hash)
@@ -21,10 +26,15 @@ module PGTips
       it = PGTips.pg_tips
       li = it.listings.first
 
-      @log[Time.now.strftime("%Y-%m-%d")] = {
+      last = @log.dig(@log.keys.max)
+
+      today = {
         "merchant" => li.merchant, 
         "price" => li.get(%w(Price Amount))
       }
+      pp [:last, last, last == today]
+
+      @log[Time.now.strftime("%Y-%m-%d")] = today
 
       @hash = {
         "title" => it.title, 
@@ -32,6 +42,8 @@ module PGTips
         "image" => it.image_url, 
         "log" => @log
       }
+
+      last == today ? nil : today
     end
 
     def save
@@ -44,8 +56,7 @@ end
 
 if __FILE__ == $0
   doc = PGTips::Doc.load
-  doc.update
-  pp doc.hash
+  pp [:update, doc.update]
   puts doc.save
 end
 
