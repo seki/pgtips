@@ -1,5 +1,6 @@
 require 'paapi'
 require 'csv'
+require 'json'
 
 module PGTips
   PartnerTag = 'ilikeruby-22'
@@ -31,8 +32,21 @@ module PGTips
       'ItemsResult', 'Items', 0, 'Offers', 'Listings', 0, 'Price', 'Amount'
     )
   end
+
+  def pg_tips
+    Client.get_items(item_ids: ['B0001LQKBQ']).items.first
+  end
 end
 
 if __FILE__ == $0
-  pp PGTips.for_tea
+  it = PGTips.pg_tips
+  li = it.listings.first
+  hash = {
+    "title" => it.title, 
+    "url" => it.detail_url, 
+    "image" => it.image_url, 
+    "merchant" => li.merchant, 
+    "price" => li.get(%w(Price Amount))
+  }
+  pp hash
 end
