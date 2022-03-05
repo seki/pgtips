@@ -22,18 +22,14 @@ GEM
     mail (2.7.1)
       mini_mime (>= 0.1.1)
     mini_mime (1.1.2)
-    nokogiri (1.13.3-x86_64-darwin)
-      racc (~> 1.4)
-    racc (1.6.0)
 
 PLATFORMS
-  x86_64-darwin-20
+  ruby
 
 DEPENDENCIES
   aws-sdk-s3
   json
   mail
-  nokogiri
 
 RUBY VERSION
    ruby 3.0.0p0
