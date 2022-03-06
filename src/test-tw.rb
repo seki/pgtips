@@ -1,8 +1,4 @@
 require 'twitter'
-require 'net/http'
-require 'uri'
-require 'date'
-require 'open-uri'
 
 class MyTwitter
   def auth
@@ -19,8 +15,8 @@ end
 if __FILE__ == $0
   tw = MyTwitter.new
   tw.auth
-  tw.twitter.update('[bot] herokuからテスト')
-  # tw.twitter.search("to:m_seki", result_type: "recent").take(3).each do |x|
-  #  puts x.text
-  #end
+  # tw.twitter.update('[bot] test')
+  tw.twitter.search("to:m_seki", result_type: "recent").take(3).each do |x|
+   puts x.text
+  end
 end

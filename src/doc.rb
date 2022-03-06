@@ -1,10 +1,12 @@
 require 'json'
+require 'twitter'
 require_relative 'bucket'
 require_relative 'pg-tips'
 
 module PGTips
   Store = Bucket.new
   Name = "tea.json"
+
   class Doc
     def self.load
       begin
@@ -88,6 +90,6 @@ if __FILE__ == $0
     "販売者がamazonじゃないので注意です〜"
   end
 
-  puts ['[bot☕️]', '@miwa719', text, doc.url].join(" ")
+  PGTips::twitter_client.update(['[bot☕️]', '@miwa719', text, doc.url].join(" "))
 end
 
