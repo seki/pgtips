@@ -8,7 +8,7 @@ module PGTips
   class Doc
     def self.load
       begin
-        it = Store.get_object('tea.json')
+        it = Store.get_object(Name)
         hash = JSON.parse(it.body.read)
       rescue
         hash = {}
@@ -22,17 +22,24 @@ module PGTips
     end
     attr_reader :hash, :log
 
+    def latest
+      @log.dig(@log.keys.max)
+    end
+
+    def amazon?
+      latest['merchant'] == 'Amazon.co.jp'
+    end
+
     def update
       it = PGTips.pg_tips
       li = it.listings.first
 
-      last = @log.dig(@log.keys.max)
+      last = latest
 
       today = {
         "merchant" => li.merchant, 
         "price" => li.get(%w(Price Amount))
       }
-      pp [:last, last, last == today]
 
       @log[Time.now.strftime("%Y-%m-%d")] = today
 
@@ -47,16 +54,40 @@ module PGTips
     end
 
     def save
-      body = @hash.to_json
-      Store.put_object('tea.json', body)
-      body
+      Store.put_object(Name, @hash.to_json)
     end
+
+    def url
+      @hash['url']
+    end
+  end
+
+  module_function
+  def twitter_client
+    Twitter::REST::Client.new(
+      :consumer_key    => ENV['TWITTER_API_KEY'],
+      :consumer_secret => ENV['TWITTER_API_SECRET'],
+      :access_token    => ENV['TWITTER_ACCESS_TOKEN'],
+      :access_token_secret => ENV['TWITTER_ACCESS_TOKEN_SECRET']
+    )
   end
 end
 
 if __FILE__ == $0
   doc = PGTips::Doc.load
-  pp [:update, doc.update]
-  puts doc.save
+  changes = doc.update
+  doc.save
+
+  text = if doc.amazon?
+    if changes
+      "amazonから#{changes['price']}円です！"
+    else
+      "いつも通りです。"
+    end
+  else
+    "販売者がamazonじゃないので注意です〜"
+  end
+
+  puts ['[bot☕️]', '@miwa719', text, doc.url].join(" ")
 end
 
