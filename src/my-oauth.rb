@@ -11,8 +11,12 @@ module PGTips
       return csv[0][0], csv[0][1]
     end
 
+    def credential_via_env
+      ENV['PGTIPS_CONSUMER_KEY'], ENV['PGTIPS_CONSUMER_SECRET']
+    end
+
     def consumer
-      consumer_key, consumer_secret = credential_via_file
+      consumer_key, consumer_secret = credential_via_file rescue credential_via_env
       OAuth::Consumer.new(
         consumer_key, 
         consumer_secret, 
