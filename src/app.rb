@@ -48,11 +48,12 @@ module PGTips
     end
 
     def oauth_start(context)
-      pp [:do_login, session_id]
+      pp [:do_login, session_id, context.req]
+      url = context.req.request_uri + '/auth/twitter/callback'
       consumer = PGTips::Twitter::consumer
-      @request_token = consumer.get_request_token(:oauth_callback => 'http://localhost:8000/auth/twitter/callback')
-      WaitingOAuth.write([@request_token.token, @request_token.secret, session_id])
-      redirect_to(context, @request_token.authorize_url)
+      request_token = consumer.get_request_token(:oauth_callback => url.to_s)
+      WaitingOAuth.write([request_token.token, request_token.secret, session_id])
+      redirect_to(context, request_token.authorize_url)
     end
 
     def oauth_callback(token, verifier)

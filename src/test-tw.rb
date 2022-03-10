@@ -1,6 +1,11 @@
 require 'twitter'
 
 class MyTwitter
+  def credential_via_file
+    csv = CSV.read(File.expand_path('pgtips-tw-credential.csv'), headers: true)
+    return csv[0][0], csv[0][1], PartnerTag
+  end
+
   def auth
     @twitter = Twitter::REST::Client.new(
       :consumer_key    => ENV['TWITTER_API_KEY'],

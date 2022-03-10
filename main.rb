@@ -13,6 +13,8 @@ server.mount('/', Tofu::Tofulet, tofu)
 
 server.mount_proc('/auth/twitter/callback') do |req, res|
   _, secret, session_id = PGTips::WaitingOAuth.take([req.query['oauth_token'], nil, nil], 0)
+  pp [:mount_proc, session_id]
+
   if session = tofu.instance_variable_get('@bar').fetch(session_id) rescue nil
     session.oauth_callback(req.query['oauth_token'], req.query['oauth_verifier'])
   else
