@@ -69,6 +69,7 @@ GEM
     unf (0.1.4)
       unf_ext
     unf_ext (0.0.8)
+    webrick (1.7.0)
 
 PLATFORMS
   ruby
@@ -80,6 +81,7 @@ DEPENDENCIES
   oauth
   paapi
   twitter
+  webrick
 
 RUBY VERSION
    ruby 3.0.0p0
