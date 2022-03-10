@@ -48,8 +48,9 @@ module PGTips
     end
 
     def oauth_start(context)
-      pp [:do_login, session_id, context.req]
       url = context.req.request_uri + '/auth/twitter/callback'
+      pp [:do_login, session_id, context.req, url]
+      url = 'https://pg-tips.herokuapp.com/auth/twitter/callback'
       consumer = PGTips::Twitter::consumer
       request_token = consumer.get_request_token(:oauth_callback => url.to_s)
       WaitingOAuth.write([request_token.token, request_token.secret, session_id])
