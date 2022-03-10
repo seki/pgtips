@@ -12,7 +12,7 @@ module PGTips
     end
 
     def credential_via_env
-      ENV['PGTIPS_CONSUMER_KEY'], ENV['PGTIPS_CONSUMER_SECRET']
+      return ENV['PGTIPS_CONSUMER_KEY'], ENV['PGTIPS_CONSUMER_SECRET']
     end
 
     def consumer
