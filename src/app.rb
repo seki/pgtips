@@ -52,7 +52,7 @@ module PGTips
       pp [:do_login, session_id, url]
       consumer = PGTips::Twitter::consumer
       request_token = consumer.get_request_token(:oauth_callback => url.to_s)
-      WaitingOAuth.write([request_token.token, request_token.secret, session_id])
+      WaitingOAuth.write([request_token.token, request_token.secret, session_id], 5)
       redirect_to(context, request_token.authorize_url)
     end
 
