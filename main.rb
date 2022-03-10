@@ -11,6 +11,7 @@ server = WEBrick::HTTPServer.new({
 tofu = Tofu::Bartender.new(PGTips::Session, 'pgtips')
 server.mount('/', Tofu::Tofulet, tofu)
 
+=begin
 server.mount_proc('/auth/twitter/callback') do |req, res|
   _, secret, session_id = PGTips::WaitingOAuth.take([req.query['oauth_token'], nil, nil], 0)
   pp [:mount_proc, session_id]
@@ -22,6 +23,7 @@ server.mount_proc('/auth/twitter/callback') do |req, res|
   end
   res.set_redirect(WEBrick::HTTPStatus::TemporaryRedirect, '/')
 end
+=end
 
 trap(:INT){exit!}
 server.start
