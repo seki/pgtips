@@ -29,9 +29,10 @@
 <div class="container">
   <div class="my-4">
     <h3 class="h3">Test</h3>
-    <pre>
-      <%=h @session.pretty_inspect %>
-    </pre>
+    <dl>
+      <dt>@tw_user_id</dt><dd><%=h @session.tw_user_id %></dd>
+      <dt>@tw_screen_name</dt><dd><%=h @session.tw_screen_name %></dd>
+    </dl>
   </div>
 </div>
 

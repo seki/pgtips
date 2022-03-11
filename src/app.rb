@@ -24,8 +24,10 @@ module PGTips
       @base = BaseTofu.new(self)
       @oauth = OAuthTofu.new(self)
       @user = nil
+      @tw_screen_name = nil
+      @tw_user_id = nil
     end
-    attr_reader :user, :oauth
+    attr_reader :user, :oauth, :tw_screen_name, :tw_user_id
     
     def do_GET(context)
       context.res_header('cache-control', 'no-store')
