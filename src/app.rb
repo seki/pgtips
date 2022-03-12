@@ -4,6 +4,7 @@ require 'pathname'
 require 'pp'
 require_relative 'my-oauth'
 require 'rinda/tuplespace'
+require_relative 'doc'
 
 module Tofu
   class Tofu
@@ -26,8 +27,10 @@ module PGTips
       @user = nil
       @tw_screen_name = nil
       @tw_user_id = nil
+      @pgtips_doc = PGTips::Doc.load
+      pp @pgtips_doc
     end
-    attr_reader :user, :oauth, :tw_screen_name, :tw_user_id
+    attr_reader :user, :oauth, :tw_screen_name, :tw_user_id, :pgtips_doc
     
     def do_GET(context)
       context.res_header('cache-control', 'no-store')
