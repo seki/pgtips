@@ -3,14 +3,14 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<link href="https://use.fontawesome.com/releases/v5.6.1/css/all.css" rel="stylesheet">
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.0/font/bootstrap-icons.css">
 <title>PGTips</title>
 </head>
 <body>
   <nav class="navbar navbar-expand-lg navbar-light bg-light">
     <div class="container-fluid">
-      <a class="navbar-brand" href="#">PGTips</a>
+      <a class="navbar-brand" href="#"><i class="bi bi-eyeglasses"></i>PGTips</a>
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
@@ -26,22 +26,31 @@
 <main>
 <%
   doc = @session.pgtips_doc.hash
-  log = @session.pgtips_doc.log.to_a.sort_by {|x| x[0]}.reverse
-  pp log
+  log = @session.pgtips_doc.log.to_a.sort_by {|x| x[0]}
+  @session.chart
 %>
 
 <div class="container">
   <div class="my-4">
-    <div class="card" style="width: 18rem;">
+    <div class="card" style="width: 22rem;">
       <img src="<%= doc['image'] %>" class="card-img-top">
       <div class="card-body">
-        <p class="card-text"><%= doc['title'] %><a href="<%= doc['url'] %>">Amazon.co.jp</a></p>
+        <p class="card-text"><%= doc['title'] %> <a href="<%= doc['url'] %>">Amazon.co.jp</a></p>
+      </div>
+      <div>
+        <canvas id="mychart"></canvas>
       </div>
     </div>
+
   </div>
 </div>
 
 </main>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.1/chart.min.js" integrity="sha512-QSkVNOCYLtj73J4hbmVoOV6KVZuMluZlioC+trLpewV8qMjsWqlIQvkn1KGX2StWvPMdWGBqim1xlC8krl1EKQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script>
+var ctx = document.getElementById('mychart');
+var myChart = new Chart(ctx, <%= @session.chart.to_json %>);
+</script>
 </body>
 </html>

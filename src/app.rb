@@ -72,6 +72,27 @@ module PGTips
       @tw_secret = access_token.secret
       @tw_token = access_token.token
     end
+
+    def chart
+      log = @pgtips_doc.log
+      labels, datasets = log.keys.sort.map {|k|
+        [k, log[k]['price']]
+      }.inject([[], []]) {|ary, tuple| ary[0] << tuple[0]; ary[1] << tuple[1]; ary}
+
+      hash = {
+        type: 'line',
+        data: {
+          labels: labels,
+          datasets: [{
+            label: 'price',
+            data: datasets,
+            borderColor: '#f88',
+          }],
+        },
+      }
+
+      hash
+    end
   end
 
   class OAuthTofu < Tofu::Tofu
