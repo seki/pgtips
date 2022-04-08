@@ -8,6 +8,8 @@ module PGTips
   Name = "tea.json"
 
   class Doc
+    Docs = {}
+
     def self.load
       begin
         it = Store.get_object(Name)
@@ -15,14 +17,30 @@ module PGTips
       rescue
         hash = {}
       end
-      self.new(hash)
+      hash.each do |k, v|
+        Docs[k] = self.new(v)
+      end
+      Docs
+    end
+
+    def self.update
+      ids = Docs.keys
+      PGTips.get_items(ids).each do |it|
+        Docs[it.hash['ASIN']].update(it)
+      end
+      hash = {}
+      Docs.each do |k, v|
+        hash[k] = v.hash
+      end
+      Store.put_object(Name, hash.to_json)
     end
 
     def initialize(hash)
       @hash = hash
       @log = hash.dig('log') || {}
+      @changes = nil
     end
-    attr_reader :hash, :log
+    attr_reader :hash, :log, :changes
 
     def latest
       @log.dig(@log.keys.max)
@@ -32,8 +50,7 @@ module PGTips
       latest['merchant'] == 'Amazon.co.jp'
     end
 
-    def update
-      it = PGTips.pg_tips
+    def update(it)
       li = it.listings.first
 
       last = latest
@@ -52,11 +69,7 @@ module PGTips
         "log" => @log
       }
 
-      last == today ? nil : today
-    end
-
-    def save
-      Store.put_object(Name, @hash.to_json)
+      @changes = (last == today ? nil : today)
     end
 
     def url
@@ -76,9 +89,10 @@ module PGTips
 end
 
 if __FILE__ == $0
-  doc = PGTips::Doc.load
-  changes = doc.update
-  doc.save
+  doc = PGTips::Doc.load['B0001LQKBQ']
+  PGTips::Doc.update
+  
+  changes = doc.changes
 
   text = if doc.amazon?
     if changes
@@ -90,6 +104,9 @@ if __FILE__ == $0
     "販売者がamazonじゃないので注意です〜"
   end
 
-  PGTips::twitter_client.update(['[bot☕️]', '@miwa719', text, doc.url].join(" "))
+  pp text
+  exit
+
+  # PGTips::twitter_client.update(['[bot☕️]', '@miwa719', text, doc.url].join(" "))
 end
 

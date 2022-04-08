@@ -36,6 +36,10 @@ module PGTips
   def pg_tips
     Client.get_items(item_ids: ['B0001LQKBQ']).items.first
   end
+
+  def get_items(ids)
+    Client.get_items(item_ids: ids).items
+  end
 end
 
 if __FILE__ == $0

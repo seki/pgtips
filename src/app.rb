@@ -5,6 +5,7 @@ require 'pp'
 require_relative 'my-oauth'
 require 'rinda/tuplespace'
 require_relative 'doc'
+require_relative 'tea-pg'
 
 module Tofu
   class Tofu
@@ -18,17 +19,18 @@ end
 
 module PGTips
   WaitingOAuth = Rinda::TupleSpace.new
+  MSeki = '5797712'
 
   class Session < Tofu::Session
     def initialize(bartender, hint='')
       super
-      @base = BaseTofu.new(self)
-      @oauth = OAuthTofu.new(self)
       @user = nil
       @tw_screen_name = nil
       @tw_user_id = nil
       @pgtips_doc = PGTips::Doc.load
-      pp @pgtips_doc
+
+      @base = BaseTofu.new(self)
+      @oauth = OAuthTofu.new(self)
     end
     attr_reader :user, :oauth, :tw_screen_name, :tw_user_id, :pgtips_doc
     
@@ -73,8 +75,13 @@ module PGTips
       @tw_token = access_token.token
     end
 
-    def chart
-      log = @pgtips_doc.log
+    def admin?
+      return true if ENV['PGTIPS_DEBUG']
+      @tw_user_id == '5797712'
+    end
+
+    def chart(asin)
+      log = @pgtips_doc[asin].log
       labels, datasets = log.keys.sort.map {|k|
         [k, log[k]['price']]
       }.inject([[], []]) {|ary, tuple| ary[0] << tuple[0]; ary[1] << tuple[1]; ary}
@@ -90,8 +97,9 @@ module PGTips
           }],
         },
       }
-
-      hash
+      {
+        B0001LQKBQ: hash
+      }
     end
   end
 
@@ -113,6 +121,8 @@ module PGTips
 
     def initialize(session)
       super(session)
+      @pgtips = ItemTofu.new(session, 'B0001LQKBQ')
+      @shop = ShopTofu.new(session)
     end
 
     def tofu_id
@@ -131,6 +141,42 @@ module PGTips
 
     def do_logout(context, params)
       @session
+    end
+  end
+
+  class ItemTofu < Tofu::Tofu
+    set_erb(__dir__ + '/pgtips.html')
+
+    def initialize(session, asin)
+      super(session)
+      @asin = asin
+      @doc = nil
+    end
+  
+    def doc
+      @doc ||= @session.pgtips_doc[@asin].hash
+    end
+
+  end
+
+  class ShopTofu < Tofu::Tofu
+    set_erb(__dir__ + '/shop.html')
+
+    def initialize(session)
+      super(session)
+    end
+
+    def list
+      TeaPG.instance.shop
+    end
+
+    def do_path_info(context)
+      unless context.req.path_info == '/shop/' 
+        _, _, shop, value = context.req.path_info.split('/')
+        pp [:found, shop, value]
+        TeaPG.instance.shop_update_status(shop, value.to_i)
+        @session.redirect_to(context, '/shop/')
+      end
     end
   end
 end
