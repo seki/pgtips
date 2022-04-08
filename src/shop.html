@@ -1,0 +1,28 @@
+<% do_path_info(context) %>
+<div class="my-4">
+  <table class="table">
+    <thead>
+      <tr>
+        <th scope="col">id</th>
+        <th scope="col">status</th>
+        <th scope="col">name</th>
+        <th scope="col">at</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% list.each do |row| %>
+      <tr>
+        <th scope="row"><a href="https://www.amazon.co.jp/sp?seller=<%=h row['id'] %>"><%=h row['id'] %></a></th>
+        <td><select class="form-select" aria-label="Default select example" onchange="location.href=value">
+
+          <option <% if row['status'].nil? %>selected<%end%>>未決</option>
+          <option <% if row['status']==0 %>selected<%end%> value="<%=h row['id'] %>/0">非表示</option>
+          <option <% if row['status']==1 %>selected<%end%> value="<%=h row['id'] %>/1">表示</option>
+        </select></td>
+        <td><%=h row.dig('value', 'Name') %></td>
+        <td><%=h row['at'].strftime("%Y-%m-%d") %></td>
+      </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>
