@@ -91,7 +91,7 @@ end
 if __FILE__ == $0
   doc = PGTips::Doc.load['B0001LQKBQ']
   PGTips::Doc.update
-  
+
   changes = doc.changes
 
   text = if doc.amazon?
@@ -104,9 +104,6 @@ if __FILE__ == $0
     "販売者がamazonじゃないので注意です〜"
   end
 
-  pp text
-  exit
-
-  # PGTips::twitter_client.update(['[bot☕️]', '@miwa719', text, doc.url].join(" "))
+  PGTips::twitter_client.update(['[bot☕️]', '@miwa719', text, doc.url].join(" "))
 end
 
