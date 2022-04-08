@@ -5,7 +5,7 @@ require 'pp'
 require_relative 'my-oauth'
 require 'rinda/tuplespace'
 require_relative 'doc'
-require_relative 'tea-pg'
+# require_relative 'tea-pg'
 
 module Tofu
   class Tofu
