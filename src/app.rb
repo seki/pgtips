@@ -80,26 +80,28 @@ module PGTips
       @tw_user_id == '5797712'
     end
 
-    def chart(asin)
-      log = @pgtips_doc[asin].log
-      labels, datasets = log.keys.sort.map {|k|
-        [k, log[k]['price']]
-      }.inject([[], []]) {|ary, tuple| ary[0] << tuple[0]; ary[1] << tuple[1]; ary}
+    def chart
+      result = {}
+      @pgtips_doc.each do |asin, data|
+        log = data.log
+        labels, datasets = log.keys.sort.map {|k|
+          [k, log[k]['price']]
+        }.inject([[], []]) {|ary, tuple| ary[0] << tuple[0]; ary[1] << tuple[1]; ary}
 
-      hash = {
-        type: 'line',
-        data: {
-          labels: labels,
-          datasets: [{
-            label: 'price',
-            data: datasets,
-            borderColor: '#f88',
-          }],
-        },
-      }
-      {
-        B0001LQKBQ: hash
-      }
+        hash = {
+          type: 'line',
+          data: {
+            labels: labels,
+            datasets: [{
+              label: 'price',
+              data: datasets,
+              borderColor: '#f88',
+            }],
+          },
+        }
+        result[asin] = hash
+      end
+      result
     end
   end
 
@@ -121,7 +123,9 @@ module PGTips
 
     def initialize(session)
       super(session)
-      @pgtips = ItemTofu.new(session, 'B0001LQKBQ')
+      @cards = session.pgtips_doc.map do |k, v|
+        ItemTofu.new(session, k)
+      end
       @shop = ShopTofu.new(session)
     end
 

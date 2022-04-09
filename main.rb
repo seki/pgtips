@@ -26,4 +26,9 @@ unless ENV['DYNO']
 end
 
 trap(:INT){exit!}
+Thread.start do
+  while $stdin.gets
+    Tofu::reload_erb
+  end
+end
 server.start

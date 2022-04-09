@@ -38,7 +38,11 @@ module PGTips
   end
 
   def get_items(ids)
-    Client.get_items(item_ids: ids).items
+    result = []
+    ids.each_slice(10) do |ary|
+      result += Client.get_items(item_ids: ary).items
+    end
+    result
   end
 end
 
