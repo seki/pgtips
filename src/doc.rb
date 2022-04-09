@@ -51,7 +51,12 @@ module PGTips
     end
 
     def update(it)
-      li = it.listings.first
+      begin
+        li = it.listings.first
+      rescue
+        pp [:empty, it.asin]
+        return
+      end
 
       last = latest
 
@@ -104,6 +109,10 @@ if __FILE__ == $0
     "販売者がamazonじゃないので注意です〜"
   end
 
+  unless ENV['DYNO']
+    pp [:not_heroku, text]
+    exit
+  end
   PGTips::twitter_client.update(['[bot☕️]', '@miwa719', text, doc.url].join(" "))
 end
 
