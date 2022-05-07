@@ -2,7 +2,7 @@
   <div class="card" style="width: 18rem;">
     <img src="<%= doc['image'] %>" class="card-img-top">
     <div class="card-body">
-      <p class="card-text"><%= doc['title'] %> <a href="<%= doc['url'] %>">Amazon.co.jp</a></p>
+      <p class="card-text"><%=h doc['title'] %> <%=h doc['log'][doc['latest']]['price'].to_i %>JPY <a href="<%= doc['url'] %>">Amazon.co.jp</a></p>
     </div>
     <div>
       <canvas class="chart-canvas" id="<%=h @asin %>"></canvas>

@@ -50,6 +50,10 @@ module PGTips
       latest['merchant'] == 'Amazon.co.jp'
     end
 
+    def price
+      latest['price'] rescue nil
+    end
+
     def update(it)
       begin
         li = it.listings.first
@@ -70,7 +74,8 @@ module PGTips
       @hash = {
         "title" => it.title, 
         "url" => it.detail_url, 
-        "image" => it.image_url, 
+        "image" => it.image_url,
+        "latest" => @log.keys.max,
         "log" => @log
       }
 
