@@ -111,7 +111,7 @@ if __FILE__ == $0
       "いつも通りです。"
     end
   else
-    "販売者がamazonではないので送料に注意して！"
+    "最安値の販売者がamazonではないです！送料に注意して！"
   end
 
   unless ENV['DYNO']
