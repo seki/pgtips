@@ -126,7 +126,6 @@ module PGTips
       @cards = session.pgtips_doc.map do |k, v|
         ItemTofu.new(session, k)
       end
-      @shop = ShopTofu.new(session)
     end
 
     def tofu_id
@@ -161,26 +160,5 @@ module PGTips
       @doc ||= @session.pgtips_doc[@asin].hash
     end
 
-  end
-
-  class ShopTofu < Tofu::Tofu
-    set_erb(__dir__ + '/shop.html')
-
-    def initialize(session)
-      super(session)
-    end
-
-    def list
-      TeaPG.instance.shop
-    end
-
-    def do_path_info(context)
-      unless context.req.path_info == '/shop/' 
-        _, _, shop, value = context.req.path_info.split('/')
-        pp [:found, shop, value]
-        TeaPG.instance.shop_update_status(shop, value.to_i)
-        @session.redirect_to(context, '/shop/')
-      end
-    end
   end
 end

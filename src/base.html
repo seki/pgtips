@@ -27,15 +27,11 @@
 
 <div class="container">
 <% path = context.req.path_info %>
-<% if @session.admin? && path.start_with?('/shop/') %>
-  <%= @shop.to_html(context) %>
-<% else %>
   <div class="row">
   <% @cards.each do |tofu| %>
     <%= tofu.to_html(context) %>
   <% end %>
   </div>
-<% end %>
 </div>
 
 </main>

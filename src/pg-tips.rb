@@ -17,12 +17,14 @@ module PGTips
 
   def setup_client
     access_key, secret_key, partner_tag = credential_via_env rescue credential_via_file
-    Paapi::Client.new(
+    client = Paapi::Client.new(
       access_key: access_key,
       secret_key: secret_key,
       partner_tag: partner_tag,
       market: :jp
     )
+    client.instance_variable_set(:@http, nil) # FIXME
+    client
   end
 
   Client = setup_client
