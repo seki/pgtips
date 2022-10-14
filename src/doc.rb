@@ -118,6 +118,6 @@ if __FILE__ == $0
     pp [:not_heroku, text]
     exit
   end
-  PGTips::twitter_client.update(['[bot☕️]', '@miwa719', text, doc.url, 'https://pg-tips.herokuapp.com/app'].join(" "))
+  PGTips::twitter_client.update(['[bot☕️]', '@miwa719', text, doc.url, 'https://pgtips.druby.work/app'].join(" "))
 end
 
